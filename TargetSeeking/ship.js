@@ -8,8 +8,8 @@ class Ship {
         this.turnSpeed = 10;
     }
 
-    draw() {
-        fill(0, 0, 255, 255);
+    draw(color) {
+        fill(d3.color(color).formatHex());
         noStroke();
         push();
         translate(this.position.x, this.position.y);
@@ -18,7 +18,7 @@ class Ship {
         pop();
     }
 
-    update(genome) {
+    update() {
         this.angle = this.angle % 360;
         let velocity = createVector(Math.cos(this.angle * Math.PI / 180) * this.velocity, Math.sin(this.angle * Math.PI / 180) * this.velocity);
         this.position.x += velocity.x;

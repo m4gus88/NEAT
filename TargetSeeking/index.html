@@ -6,6 +6,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
     <script src="../neat/activators.js"></script>
     <script src="../neat/aggregators.js"></script>
@@ -14,6 +15,7 @@
     <script src="../neat/genome.js"></script>
     <script src="../neat/reproduction.js"></script>
     <script src="../neat/population.js"></script>
+    <script src="../neat/species.js"></script>
     <script src="../neat/visualization.js"></script>
     <script src="../neat/networkactivator/networkactivator.js"></script>
     <script src="../neat/networkactivator/feedforwardnetwork.js"></script>
@@ -22,11 +24,24 @@
     <script src="ship.js"></script>
     <script src="player.js"></script>
     <script src="sketch.js"></script>
+
+    <style>
+        #canvascontainer {
+            float: left;
+        }
+
+        .species-box {
+            display: block;
+            width: 10px;
+            height: 10px;
+        }
+    </style>
 </head>
 <body>
     <div id="canvascontainer"></div>
+    <div id="svgContainer"></div>
     <div id="currentGeneration">Current Generation: 0</div>
     <div id="bestFitness"></div>
-    <div id="svgContainer"></div>
+    <div id="species"></div>
 </body>
 </html>

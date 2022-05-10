@@ -1,6 +1,7 @@
 class Player{
-	constructor(genome){
+	constructor(genome, species){
 		this.brain = genome;
+		this.species = species;
 		this.ship = new Ship();
 		this.score = 1;
 		this.lifespan = 0;
@@ -37,7 +38,7 @@ class Player{
 	}
 
 	draw() {
-		this.ship.draw();
+		this.ship.draw(colors(this.species));
 	}
 
 	setFitness() {

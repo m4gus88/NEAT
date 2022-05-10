@@ -208,4 +208,51 @@ class Genome {
         }
     }
 
+    distance(other) {
+        let neuronDistance = 0.0;
+        let disjointNeurons = 0;
+        for (let key of Object.keys(other.neurons)) {
+            if (!Object.keys(this.neurons).includes(key)) {
+                disjointNeurons++;
+            }
+        }
+
+        for (let key of Object.keys(this.neurons)) {
+            if (!Object.keys(other.neurons).includes(key)) {
+                disjointNeurons++;
+            } else {
+                neuronDistance += this.neurons[key].distance(other.neurons[key]);
+            }
+        }
+
+        let maxNeurons = Math.max(Object.keys(this.neurons).length, Object.keys(other.neurons).length);
+        neuronDistance += disjointNeurons * this.config.neuron.disjointCoefficient / maxNeurons;
+
+        let connectionDistance = 0.0;
+        let disjointConnections = 0;
+        for (let key of Object.keys(other.connections)) {
+            if (!Object.keys(this.connections).includes(key)) {
+                disjointConnections++;
+            }
+        }
+
+        for (let key of Object.keys(this.connections)) {
+            if (!Object.keys(other.connections).includes(key)) {
+                disjointConnections++;
+            } else {
+                connectionDistance += this.connections[key].distance(other.connections[key]);
+            }
+        }
+
+        let maxConnections = Math.max(Object.keys(this.connections).length, Object.keys(other.connections).length);
+        connectionDistance += disjointConnections * this.config.connection.disjointCoefficient / maxConnections;
+
+        return neuronDistance + connectionDistance;
+    }
+
+    size() {
+        let enabledConnections = Object.values(this.connections).filter(connection => connection.enabled);
+        return Object.keys(this.neurons).length + enabledConnections.length;
+    }
+
 }

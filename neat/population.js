@@ -10,20 +10,24 @@ var DEFAULT_CONFIG = {
             max: 30.0,
             mutationChance: 0.7,
             mutationPower: 0.4,
-            replaceChance: 0.02
+            replaceChance: 0.02,
+            distanceCoefficient: 0.3
         },
         aggregator: {
             defaultValue: 'sum',
             mutateRate: 0.0,
-            options: ['sum']
+            options: ['sum'],
+            distanceCoefficient: 1.0
         },
         activator: {
             defaultValue: 'sigmoid',
             mutateRate: 0.0,
-            options: ['sigmoid']
+            options: ['sigmoid'],
+            distanceCoefficient: 1.0
         },
         addChance: 0.2,
-        deleteChance: 0.2
+        deleteChance: 0.2,
+        disjointCoefficient: 1.0
     },
     connection: {
         weight: {
@@ -31,11 +35,24 @@ var DEFAULT_CONFIG = {
             max: 30.0,
             mutationChance: 0.1,
             mutationPower: 0.4,
-            replaceChance: 0.02
+            replaceChance: 0.02,
+            distanceCoefficient: 0.3
         },
-        enabledMutationChance: 0.01,
-        addChance: 0.5,
-        deleteChance: 0.5
+        enabled: {
+            mutationChance: 0.01,
+            distanceCoefficient: 1.0
+        },
+        addChance: 0.2,
+        deleteChance: 0.2,
+        disjointCoefficient: 1.0
+    },
+    species: {
+        distanceThreshold: 70.0,
+        extinctionThreshold: 10,
+    },
+    reproduction: {
+        survivalThreshold: 0.2,
+        elitism: 2
     }
 };
 
@@ -46,6 +63,7 @@ class Population {
         this.reproduction = new Reproduction();
         this.generation = 0;
         this.bestGenome = null;
+        this.species = null;
     }
 
     setup() {
@@ -53,6 +71,9 @@ class Population {
             let genome = this.reproduction.createGenome(this.config);
             this.genomes[genome.key] = genome;
         }
+
+        this.species = new SpeciesSet(this.config.species);
+        this.species.speciate(Object.values(this.genomes), 0);
     }
 
     evolve() {
@@ -64,10 +85,14 @@ class Population {
         }
         this.bestGenome = best;
 
-        let newGenomes = this.reproduction.reproduce(this.config.populationSize, this.genomes);
+        this.species.updateFitness();
+
+        let newGenomes = this.reproduction.reproduce(this.config.populationSize, this.species, this.config.reproduction);
         delete this.genomes;
         this.genomes = newGenomes;
         this.generation++;
+
+        this.species.speciate(Object.values(this.genomes), this.generation);
     }
 
 }

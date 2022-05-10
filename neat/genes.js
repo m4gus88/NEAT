@@ -43,6 +43,17 @@ class Neuron {
             this.activator = Attributes.randomizeString(this.config.activator.options);
         }
     }
+
+    distance(other) {
+        let d = Math.abs(this.bias - other.bias) * this.config.bias.distanceCoefficient;
+        if (this.aggregator !== other.aggregator) {
+            d += this.config.aggregator.distanceCoefficient;
+        }
+        if (this.activator !== other.activator) {
+            d += this.config.activator.distanceCoefficient;
+        }
+        return d;
+    }
 }
 
 class Connection {
@@ -85,8 +96,16 @@ class Connection {
             this.weight = Attributes.randomizeNumber(this.config.weight.min, this.config.weight.max);
         }
 
-        if (Math.random() < this.config.enabledMutationChance) {
+        if (Math.random() < this.config.enabled.mutationChance) {
             this.enabled = Math.random() < 0.5;
         }
+    }
+
+    distance(other) {
+        let d = Math.abs(this.weight - other.weight) * this.config.weight.distanceCoefficient;
+        if (this.enabled !== other.enabled) {
+            d += this.config.enabled.distanceCoefficient;
+        }
+        return d;
     }
 }
