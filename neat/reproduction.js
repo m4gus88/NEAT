@@ -35,7 +35,7 @@ class Reproduction {
             if (fitnessSum > 0) {
                 spawns[s.key] = Math.round(s.adjustedFitness / fitnessSum * populationSize);
             } else {
-                spawns[s.key] = Math.round(populationSize / species.length);
+                spawns[s.key] = Math.round(populationSize / remainingSpecies.length);
             }
         });
 
@@ -54,7 +54,6 @@ class Reproduction {
                     for (let j = 0; j < elitism; j++) {
                         let newGenome = s.members[j];
                         if (!!newGenome) {
-                            newGenome.generation++;
                             newGenomes[newGenome.key] = newGenome;
                         }
                     }

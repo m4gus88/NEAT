@@ -89,7 +89,7 @@ class Genome {
             let neuron1 = parent1.neurons[key];
             let neuron2 = parent2.neurons[key];
             if (!neuron2) {
-                result.neurons[key] = new Neuron(neuron1.key, neuron1.bias, neuron1.aggregator, neuron1.activator, neuron1.config);
+                result.neurons[key] = new Neuron(neuron1.key, neuron1.bias, neuron1.response, neuron1.aggregator, neuron1.activator, neuron1.config);
             } else {
                 result.neurons[key] = neuron1.crossOver(neuron2);
             }

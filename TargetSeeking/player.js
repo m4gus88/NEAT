@@ -13,13 +13,16 @@ class Player{
 			return;
 		}
 
-		let outputs = this.brain.activate([this.ship.position.x, this.ship.position.y, this.ship.angle, target.position.x, target.position.y]);
+		let distanceToTarget = dist(this.ship.position.x, this.ship.position.y, target.position.x, target.position.y);
+		let vectorToTarget = createVector(target.position.x, target.position.y, 0).sub(createVector(this.ship.position.x, this.ship.position.y, 0));
+		let angleToTarget = createVector(this.ship.position.x, this.ship.position.y, 0).rotate(this.ship.angle * Math.PI / 180).angleBetween(vectorToTarget);
+		let outputs = this.brain.activate([distanceToTarget, this.ship.angle, angleToTarget]);
 
-		if (outputs[1] < 0.3) {
+		if (outputs[1] < 0.4) {
 			this.ship.angle -= this.ship.turnSpeed;
 		}
 
-		if (outputs[1] > 0.7) {
+		if (outputs[1] > 0.6) {
 			this.ship.angle += this.ship.turnSpeed;
 		}
 
@@ -31,6 +34,8 @@ class Player{
 		let d = dist(this.ship.position.x, this.ship.position.y, target.position.x, target.position.y);
 		if (d < 100) {
 			this.score += 100 - d;
+		} else {
+			this.score++;
 		}
 
 		if (this.lifespan > 200) {

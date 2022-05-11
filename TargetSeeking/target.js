@@ -20,7 +20,7 @@ class Target {
         this.position.x += velocity.x;
         this.position.y += velocity.y;
 
-        if (this.position.x < 0 || this.position.x > width || this.position.y < 0 || this.position.y > height) {
+        if (this.position.x < 50 || this.position.x > width - 50 || this.position.y < 50 || this.position.y > height - 50) {
             this.angle = (this.angle + 180) % 360;
         }
     }

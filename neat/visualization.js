@@ -67,7 +67,7 @@ class Visualizer {
                 svg.selectAll('line')
                     .data(connections)
                     .join('line')
-                    .style("stroke-width", d => (d.enabled ? (d.weight > 0 ? 0.3 + d.weight : 0.3 + d.weight * -1) : 0) * 0.5)
+                    .style("stroke-width", d => (d.enabled ? (d.weight > 0 ? 0.3 + d.weight : 0.3 + d.weight * -1) : 0) * 0.2)
                     .style("stroke", d => d.weight > 0 ? "#0d0" : "#f00")
                     .attr("x1", d => d.source.x)
                     .attr("y1", d => d.source.y)

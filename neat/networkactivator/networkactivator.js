@@ -9,4 +9,8 @@ class NetworkActivator {
 
     activate(inputs) {}
 
+    neuronResponse(neuronEval, inputs) {
+        return neuronEval.activator(neuronEval.aggregator(inputs) * neuronEval.response + neuronEval.bias);
+    }
+
 }

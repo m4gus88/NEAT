@@ -24,6 +24,7 @@ class FeedForwardNetwork extends NetworkActivator {
                     aggregator: AGGREGATORS[neuron.aggregator],
                     activator: ACTIVATORS[neuron.activator],
                     bias: neuron.bias,
+                    response: neuron.response,
                     inputWeights: inputWeights
                 });
             }
@@ -69,8 +70,7 @@ class FeedForwardNetwork extends NetworkActivator {
                 nodeInputs.push(this.values[input] * neuronEval.inputWeights[input]);
             }
 
-            let output = neuronEval.aggregator(nodeInputs);
-            this.values[neuronEval.neuronId] = neuronEval.activator(neuronEval.bias + output);
+            this.values[neuronEval.neuronId] = this.neuronResponse(neuronEval, nodeInputs);
         }
 
         let outputs = {}

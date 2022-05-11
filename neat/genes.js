@@ -1,26 +1,29 @@
 class Neuron {
-    constructor(key, bias, aggregator, activator, config) {
+    constructor(key, bias, response, aggregator, activator, config) {
         this.key = key;
         this.bias = bias;
+        this.response = response;
         this.aggregator = aggregator;
         this.activator = activator;
         this.config = config;
     }
 
     static create(key, config) {
-        let neuron = new Neuron(key, 0.0, config.aggregator.defaultValue, config.activator.defaultValue, config);
+        let neuron = new Neuron(key, 0.0, 0.0, config.aggregator.defaultValue, config.activator.defaultValue, config);
         neuron.init();
         return neuron;
     }
 
     init() {
-        this.bias = Attributes.randomizeNumber(this.config.bias.min, this.config.bias.max);
+        this.bias = Attributes.initNumber(this.config.bias.defaultMean, this.config.bias.defaultDeviation);
+        this.bias = Attributes.initNumber(this.config.response.defaultMean, this.config.response.defaultDeviation);
         this.aggregator = this.config.aggregator.defaultValue;
         this.activator = this.config.activator.defaultValue;
     }
 
     crossOver(other) {
         return new Neuron(this.key, Attributes.cross(this.bias, other.bias),
+            Attributes.cross(this.response, other.response),
             Attributes.cross(this.aggregator, other.aggregator),
             Attributes.cross(this.activator, other.activator),
             this.config);
@@ -32,7 +35,15 @@ class Neuron {
         }
 
         if (Math.random() < this.config.bias.replaceChance) {
-            this.bias = Attributes.randomizeNumber(this.config.bias.min, this.config.bias.max);
+            this.bias = Attributes.initNumber(this.config.bias.min, this.config.bias.max);
+        }
+
+        if (Math.random() < this.config.response.mutationChance) {
+            this.response = Attributes.mutateNumber(this.response, this.config.response.mutationPower, this.config.response.min, this.config.response.max);
+        }
+
+        if (Math.random() < this.config.response.replaceChance) {
+            this.response = Attributes.initNumber(this.config.response.min, this.config.response.max);
         }
 
         if (Math.random() < this.config.aggregator.mutationChance) {
@@ -45,10 +56,13 @@ class Neuron {
     }
 
     distance(other) {
-        let d = Math.abs(this.bias - other.bias) * this.config.bias.distanceCoefficient;
+        let d = (Math.abs(this.bias - other.bias) * this.config.bias.distanceCoefficient +
+            Math.abs(this.response - other.response)) * this.config.response.distanceCoefficient;
+
         if (this.aggregator !== other.aggregator) {
             d += this.config.aggregator.distanceCoefficient;
         }
+
         if (this.activator !== other.activator) {
             d += this.config.activator.distanceCoefficient;
         }
@@ -80,7 +94,7 @@ class Connection {
     }
 
     init() {
-        this.weight = Attributes.randomizeNumber(this.config.weight.min, this.config.weight.max);
+        this.weight = Attributes.initNumber(this.config.weight.defaultMean, this.config.weight.defaultDeviation);
     }
 
     crossOver(other) {
@@ -93,7 +107,7 @@ class Connection {
         }
 
         if (Math.random() < this.config.weight.replaceChance) {
-            this.weight = Attributes.randomizeNumber(this.config.weight.min, this.config.weight.max);
+            this.weight = Attributes.initNumber(this.config.weight.min, this.config.weight.max);
         }
 
         if (Math.random() < this.config.enabled.mutationChance) {

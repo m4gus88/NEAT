@@ -1,6 +1,6 @@
 class Attributes {
-    static randomizeNumber(min, max) {
-        return Math.random() * (max - min) + min;
+    static initNumber(mean, deviation) {
+        return randomGaussian(mean, deviation);
     }
 
     static mutateNumber(value, power, min, max) {

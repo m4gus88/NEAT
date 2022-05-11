@@ -35,6 +35,7 @@ class RecurrentNetwork extends NetworkActivator {
                 aggregator: AGGREGATORS[neuron.aggregator],
                 activator: ACTIVATORS[neuron.activator],
                 bias: neuron.bias,
+                response: neuron.response,
                 inputWeights: neuronInputs[neuron.key]
             });
         });
@@ -60,8 +61,7 @@ class RecurrentNetwork extends NetworkActivator {
                 nodeInputs.push(inputValues[input] * neuronEval.inputWeights[input]);
             }
 
-            let output = neuronEval.aggregator(nodeInputs);
-            outputValues[neuronEval.neuronId] = neuronEval.activator(neuronEval.bias + output);
+            outputValues[neuronEval.neuronId] = this.neuronResponse(neuronEval, nodeInputs);
         }
 
         let outputs = {}
