@@ -37,7 +37,7 @@ function draw() {
         drawTable();
 
         if (!!population.bestGenome) {
-            document.getElementById("bestFitness").innerText = "Best Fitness: " + population.bestGenome.fitness;
+            document.getElementById("bestFitness").innerText = "Best Fitness: " + Math.round(population.bestGenome.fitness);
             visualization = new Visualizer("best", population.bestGenome);
             visualization.draw();
         }
