@@ -7,13 +7,16 @@ class Reproduction {
     reproduce(populationSize, species, config) {
         let remainingSpecies = [];
         let extinctSpecies = [];
-        species.species.forEach(s => {
-            if (species.isStagnant(s)) {
+
+        species.species.sort((a, b) => b.fitness - a.fitness);
+        for (let i in species.species) {
+            let s = species.species[i];
+            if (species.isStagnant(s) && i >= config.speciesElitism) {
                 extinctSpecies.push(s.key);
             } else {
                 remainingSpecies.push(s);
             }
-        });
+        }
         species.extinction(extinctSpecies);
 
         if (!remainingSpecies.length) {

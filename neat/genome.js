@@ -13,6 +13,7 @@ class Genome {
         this.connections = {};
         this.input_neurons = [];
         this.output_neurons = [];
+        this.networkActivator = null;
         this.fitness = null;
         this.config = config;
         this.neuronKey = 0;
@@ -42,6 +43,14 @@ class Genome {
                 this.deleteConnection();
             }
         }
+    }
+
+    activate(inputs) {
+        if (!this.networkActivator) {
+            this.networkActivator = FeedForwardNetwork.create(this);
+        }
+
+        return this.networkActivator.activate(inputs);
     }
 
     crossOver(other) {

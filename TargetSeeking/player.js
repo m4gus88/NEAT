@@ -13,7 +13,7 @@ class Player{
 			return;
 		}
 
-		let outputs = FeedForwardNetwork.create(this.brain).activate([this.ship.position.x, this.ship.position.y, this.ship.angle, target.position.x, target.position.y]);
+		let outputs = this.brain.activate([this.ship.position.x, this.ship.position.y, this.ship.angle, target.position.x, target.position.y]);
 
 		if (outputs[1] > 0.5) {
 			this.ship.angle -= this.ship.turnSpeed;
