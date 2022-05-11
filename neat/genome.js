@@ -47,7 +47,11 @@ class Genome {
 
     activate(inputs) {
         if (!this.networkActivator) {
-            this.networkActivator = FeedForwardNetwork.create(this);
+            if (this.config.feedForward) {
+                this.networkActivator = FeedForwardNetwork.create(this);
+            } else {
+                this.networkActivator = RecurrentNetwork.create(this);
+            }
         }
 
         return this.networkActivator.activate(inputs);
@@ -124,8 +128,11 @@ class Genome {
         let key = Connection.keyify(input, output);
 
         if (Object.keys(this.connections).includes(key) || // Don't duplicate connections
-            this.output_neurons.includes(input) && this.output_neurons.includes(output) || // Don't allow connections between output neurons
-            this.createsCycle(input, output)) { // Don't allow loops
+            this.output_neurons.includes(input) && this.output_neurons.includes(output)) { // Don't allow connections between output neurons
+            return;
+        }
+
+        if (this.config.feedForward && this.createsCycle(input, output)) { // Don't allow loops in feed-forward networks
             return;
         }
 

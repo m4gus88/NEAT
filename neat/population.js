@@ -10,7 +10,7 @@ class Population {
 
     setup() {
         for (let i = 0; i < this.config.populationSize; i++) {
-            let genome = this.reproduction.createGenome(this.config);
+            let genome = new Genome(++genome_key, this.config);
             this.genomes[genome.key] = genome;
         }
 

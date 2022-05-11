@@ -1,9 +1,4 @@
 class Reproduction {
-
-    createGenome(config) {
-        return new Genome(++genome_key, config);
-    }
-
     reproduce(populationSize, species, config) {
         let remainingSpecies = [];
         let extinctSpecies = [];

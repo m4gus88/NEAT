@@ -10,7 +10,7 @@ function setup() {
     population = new Population();
     population.config.populationSize = 1000;
     population.config.numberOfInputs = 5;
-    population.config.numberOfOutputs = 2;
+    population.config.numberOfOutputs = 1;
 
     population.setup();
 

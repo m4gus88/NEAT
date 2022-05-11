@@ -15,15 +15,18 @@ class Player{
 
 		let outputs = this.brain.activate([this.ship.position.x, this.ship.position.y, this.ship.angle, target.position.x, target.position.y]);
 
-		if (outputs[1] > 0.5) {
+		if (outputs[1] < 0.3) {
 			this.ship.angle -= this.ship.turnSpeed;
 		}
 
-		if (outputs[2] > 0.5) {
+		if (outputs[1] > 0.7) {
 			this.ship.angle += this.ship.turnSpeed;
 		}
 
-		this.ship.update();
+		if (!this.ship.update()) {
+			this.dead = true;
+			return;
+		}
 
 		let d = dist(this.ship.position.x, this.ship.position.y, target.position.x, target.position.y);
 		if (d < 100) {
@@ -32,6 +35,7 @@ class Player{
 
 		if (this.lifespan > 200) {
 			this.dead = true;
+			return;
 		}
 
 		this.lifespan++;

@@ -64,7 +64,7 @@ class FeedForwardNetwork extends NetworkActivator {
         }
 
         for (let neuronEval of this.neuronEvals) {
-            let nodeInputs = []
+            let nodeInputs = [];
             for (let input of Object.keys(neuronEval.inputWeights)) {
                 nodeInputs.push(this.values[input] * neuronEval.inputWeights[input]);
             }
