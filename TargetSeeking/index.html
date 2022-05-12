@@ -49,8 +49,11 @@
     </div>
     <div id="buttons">
         <input id="pause" type="button" value="Pause" onclick="pause()" />
-        <input type="button" value="Save" onclick="savePopulation()" />
-        <input type="file" id="loadPopulation" />
+        <input id="save" type="button" value="Save" onclick="savePopulation()" />
+        <input id="loadPopulation" type="file" />
+        <input id="replay" type="button" value="Replay" onclick="replay()" />
+        <input id="back" type="button" value="<" onclick="back()" style="display: none" />
+        <input id="forward" type="button" value=">" onclick="forward()" style="display: none" />
     </div>
 </body>
 </html>

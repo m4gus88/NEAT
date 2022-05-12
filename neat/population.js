@@ -6,8 +6,7 @@ class Population {
         this.generation = 0;
         this.bestGenome = null;
         this.species = null;
-        this.genomeHistory = [];
-        this.speciesHistory = [];
+        this.history = [];
     }
 
     static fromObject(o, config) {
@@ -18,8 +17,7 @@ class Population {
         p.generation = o.generation
         p.bestGenome = Genome.fromObject(o.bestGenome, config);
         p.species = SpeciesSet.fromObject(o.species, config);
-        p.genomeHistory = o.genomeHistory;
-        p.speciesHistory = o.speciesHistory;
+        p.genomeHistory = o.history;
 
         return p;
     }
@@ -30,8 +28,16 @@ class Population {
             generation: this.generation,
             bestGenome: this.bestGenome ? this.bestGenome.toObject() : null,
             species: this.species.toObject(),
-            genomeHistory: this.genomeHistory,
-            speciesHistory: this.speciesHistory
+            genomeHistory: this.history,
+        };
+    }
+
+    toObjectWithoutHistory() {
+        return {
+            genomes: Object.values(this.genomes).map(g => g.toObject()),
+            generation: this.generation,
+            bestGenome: this.bestGenome ? this.bestGenome.toObject() : null,
+            species: this.species.toObject()
         };
     }
 
@@ -56,13 +62,25 @@ class Population {
 
         this.species.updateFitness();
 
-        this.genomeHistory.push(Object.values(this.genomes).map(g => g.toObject()));
-        this.speciesHistory.push(this.species.toObject());
+        this.history.push(this.toObjectWithoutHistory());
+        this.reproduce();
+    }
 
+    reproduce() {
         this.genomes = this.reproduction.reproduce(this.config.populationSize, this.species, this.config.reproduction);
         this.generation++;
 
         this.species.speciate(Object.values(this.genomes), this.generation);
+    }
+
+    revertToGeneration(generation) {
+        let p = this.history[generation];
+        this.genomes = {};
+        p.genomes.forEach(g => this.genomes[g.key] = Genome.fromObject(g, this.config));
+
+        this.generation = p.generation;
+        this.bestGenome = p.bestGenome ? Genome.fromObject(p.bestGenome, this.config) : null;
+        this.species = SpeciesSet.fromObject(p.species, this.config);
     }
 
 }

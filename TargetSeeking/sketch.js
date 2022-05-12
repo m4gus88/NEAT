@@ -1,10 +1,13 @@
-var target, config, population, players, visualization, paused;
+var target, config, population, players, visualization, paused, replayMode;
 var colors;
 
 function setup() {
     let canvas = createCanvas(600, 600);
     canvas.parent('canvascontainer');
+    colors = d3.scaleOrdinal().domain([]).range(d3.schemeSet2);
 
+    paused = false;
+    replayMode = false;
     target = new Target();
 
     population = new Population();
@@ -14,14 +17,7 @@ function setup() {
     config = population.config;
 
     population.setup();
-
-    players = [];
-    population.species.species.forEach(s => s.members.forEach(genome => players.push(new Player(genome, s.key))));
-    colors = d3.scaleOrdinal().domain([]).range(d3.schemeSet2);
-
-    paused = false;
-
-    drawTable();
+    reset();
 
     // Setup load button
     (function(){
@@ -36,10 +32,7 @@ function setup() {
             console.log(event.target.result);
             var obj = JSON.parse(event.target.result);
             population = Population.fromObject(obj, config);
-            players = [];
-            population.species.species.forEach(s => s.members.forEach(genome => players.push(new Player(genome, s.key))));
-            document.getElementById("currentGeneration").innerText = "Current Generation: " + population.generation;
-            drawTable();
+            reset();
         }
 
         document.getElementById('loadPopulation').addEventListener('change', onChange);
@@ -52,24 +45,14 @@ function draw() {
         return;
     }
 
-    target.update();
-
     if (!players.every(player => player.dead)) {
+        target.update();
         players.forEach(player => player.update());
     } else {
-        players.forEach(player => player.setFitness());
-        population.evolve();
-
-        players = [];
-        population.species.species.forEach(s => s.members.forEach(genome => players.push(new Player(genome, s.key))));
-
-        document.getElementById("currentGeneration").innerText = "Current Generation: " + population.generation;
-        drawTable();
-
-        if (!!population.bestGenome) {
-            document.getElementById("bestFitness").innerText = "Best Fitness: " + Math.round(population.bestGenome.fitness);
-            visualization = new Visualizer("best", population.bestGenome);
-            visualization.draw();
+        if (!replayMode) {
+            players.forEach(player => player.setFitness());
+            population.evolve();
+            reset();
         }
     }
 
@@ -127,6 +110,19 @@ function pause() {
     }
 }
 
+function reset() {
+    players = [];
+    population.species.species.forEach(s => s.members.forEach(genome => players.push(new Player(genome, s.key))));
+    document.getElementById("currentGeneration").innerText = "Current Generation: " + population.generation;
+    drawTable();
+
+    if (!!population.bestGenome) {
+        document.getElementById("bestFitness").innerText = "Best Fitness: " + Math.round(population.bestGenome.fitness);
+        visualization = new Visualizer("best", population.bestGenome);
+        visualization.draw();
+    }
+}
+
 function savePopulation() {
     let blob = new Blob([JSON.stringify(population.toObject())], { type: "text/plain;charset=utf-8" });
     let url = window.URL || window.webkitURL;
@@ -138,4 +134,38 @@ function savePopulation() {
     document.body.append(a);
     a.click();
     document.body.removeChild(a);
+}
+
+function replay() {
+    replayMode = !replayMode;
+
+    if (replayMode) {
+        d3.select('#replay').attr('value', 'Back to live');
+        d3.select('#back').style('display', 'block');
+        d3.select('#forward').style('display', 'block');
+        population.revertToGeneration(population.history.length - 1);
+    } else {
+        d3.select('#replay').attr('value', 'Replay');
+        d3.select('#back').style('display', 'none');
+        d3.select('#forward').style('display', 'none');
+
+        population.revertToGeneration(population.history.length - 1);
+        population.reproduce();
+    }
+
+    reset();
+}
+
+function back() {
+    if (population.generation > 0) {
+        population.revertToGeneration(population.generation - 1);
+        reset();
+    }
+}
+
+function forward() {
+    if (population.generation < population.history.length - 1) {
+        population.revertToGeneration(population.generation + 1);
+        reset();
+    }
 }
