@@ -28,13 +28,13 @@ var DEFAULT_CONFIG = {
         aggregator: {
             defaultValue: 'sum',
             mutateRate: 0.01,
-            options: Object.values(AGGREGATORS),   // Needs to be one of the functions in AGGREGATORS.
+            options: Object.keys(AGGREGATORS),     // Needs to be one of the functions in AGGREGATORS.
             distanceCoefficient: 1.0               // How many points of difference it makes to have a different aggregator function.
         },
         activator: {
             defaultValue: 'sigmoid',
             mutateRate: 0.05,
-            options: Object.values(ACTIVATORS),    // Needs to be one of the functions in ACTIVATORS.
+            options: Object.keys(ACTIVATORS),      // Needs to be one of the functions in ACTIVATORS.
             distanceCoefficient: 1.0               // How many points of difference it makes to have a different activator function.
         },
         addChance: 0.2,                            // Probability of adding a neuron when mutating.

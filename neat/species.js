@@ -10,7 +10,30 @@ class Species {
         this.members = [];
         this.fitness = null;
         this.adjustedFitness = null;
-        this.fitnessHistory = [];
+    }
+
+    static fromObject(o, config) {
+        let s = new Species(o.key, o.generation);
+        s.created = o.created;
+        s.lastImproved = o.lastImproved;
+        s.representative = Genome.fromObject(o.representative, config);
+        s.members = o.members.map(m => Genome.fromObject(m, config));
+        s.fitness = o.fitness;
+        s.adjustedFitness = o.adjustedFitness;
+        return s;
+    }
+
+    toObject() {
+        return {
+            key: this.key,
+            created: this.created,
+            generation: this.generation,
+            lastImproved: this.lastImproved,
+            representative: this.representative.toObject(),
+            members: this.members.map(g => g.toObject()),
+            fitness: this.fitness,
+            adjustedFitness: this.adjustedFitness
+        };
     }
 }
 
@@ -20,6 +43,20 @@ class SpeciesSet {
         this.lastIndex = 0;
         this.cache = new DistanceCache();
         this.config = config;
+    }
+
+    static fromObject(o, config) {
+        let s = new SpeciesSet(config.species);
+        s.species = o.species.map(species => Species.fromObject(species, config));
+        s.lastIndex = o.lastIndex;
+        return s;
+    }
+
+    toObject() {
+        return {
+            species: this.species.map(s => s.toObject()),
+            lastIndex: this.lastIndex
+        };
     }
 
     speciate(genomes, generation) {
@@ -77,7 +114,6 @@ class SpeciesSet {
                 species.lastImproved = species.generation;
             }
 
-            species.fitnessHistory.push(species.fitness);
             species.fitness = newFitness;
         }
     }

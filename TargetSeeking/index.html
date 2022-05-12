@@ -28,7 +28,7 @@
     <script src="sketch.js"></script>
 
     <style>
-        #canvascontainer {
+        #canvascontainer, #svgContainer, #stats {
             float: left;
         }
 
@@ -42,8 +42,15 @@
 <body>
     <div id="canvascontainer"></div>
     <div id="svgContainer"></div>
-    <div id="currentGeneration">Current Generation: 0</div>
-    <div id="bestFitness"></div>
-    <div id="species"></div>
+    <div id="stats">
+        <div id="currentGeneration">Current Generation: 0</div>
+        <div id="bestFitness"></div>
+        <div id="species"></div>
+    </div>
+    <div id="buttons">
+        <input id="pause" type="button" value="Pause" onclick="pause()" />
+        <input type="button" value="Save" onclick="savePopulation()" />
+        <input type="file" id="loadPopulation" />
+    </div>
 </body>
 </html>

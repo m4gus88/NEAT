@@ -14,6 +14,20 @@ class Neuron {
         return neuron;
     }
 
+    static fromObject(o, config) {
+        return new Neuron(o.key, o.bias, o.response, o.aggregator, o.activator, config);
+    }
+
+    toObject() {
+        return {
+            key: this.key,
+            bias: this.bias,
+            response: this.response,
+            aggregator: this.aggregator,
+            activator: this.activator
+        };
+    }
+
     init() {
         this.bias = Attributes.initNumber(this.config.bias.defaultMean, this.config.bias.defaultDeviation);
         this.bias = Attributes.initNumber(this.config.response.defaultMean, this.config.response.defaultDeviation);
@@ -85,8 +99,21 @@ class Connection {
         return connection;
     }
 
+    static fromObject(o, config) {
+        return new Connection(o.input, o.output, o.weight, o.enabled, config);
+    }
+
     static keyify(input, output) {
         return '' + input + ',' + output;
+    }
+
+    toObject() {
+        return {
+            input: this.input,
+            output: this.output,
+            weight: this.weight,
+            enabled: this.enabled
+        }
     }
 
     key() {

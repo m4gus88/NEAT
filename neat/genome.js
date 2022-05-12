@@ -15,8 +15,8 @@ class Genome {
         this.output_neurons = [];
         this.networkActivator = null;
         this.fitness = null;
-        this.config = config;
         this.neuronKey = 0;
+        this.config = config;
 
         for (let i = 0; i < config.numberOfInputs; i++) {
             this.input_neurons.push(-i - 1);
@@ -27,22 +27,56 @@ class Genome {
             this.neurons[neuron.key] = neuron;
             this.output_neurons.push(neuron.key);
         }
+    }
+
+    static create(key, config) {
+        let genome = new Genome(key, config);
 
         if (config.setupConnections === SetupConnections.ALL || config.setupConnections === SetupConnections.SOME) {
-            this.output_neurons.forEach(outputKey => {
-                this.input_neurons.forEach(inputKey => {
+            genome.output_neurons.forEach(outputKey => {
+                genome.input_neurons.forEach(inputKey => {
                     let connection = Connection.create(inputKey, outputKey, config.connection);
-                    this.connections[connection.key()] = connection;
+                    genome.connections[connection.key()] = connection;
                 });
             });
         }
 
         if (config.setupConnections === SetupConnections.SOME) {
-            let num = Math.random() * Object.keys(this.connections).length >> 0;
+            let num = Math.random() * Object.keys(genome.connections).length >> 0;
             for (let i = 0; i < num; i++) {
-                this.deleteConnection();
+                genome.deleteConnection();
             }
         }
+
+        return genome;
+    }
+
+    static fromObject(o, config) {
+        let genome = new Genome(o.key, config);
+
+        genome.neurons = {};
+        o.neurons.forEach(neuron => genome.neurons[neuron.key] = Neuron.fromObject(neuron, config.neuron));
+
+        genome.connections = {};
+        o.connections.forEach(connection => {
+            let c = Connection.fromObject(connection, config.connection);
+            genome.connections[c.key()] = c;
+        });
+
+        genome.fitness = o.fitness;
+        genome.neuronKey = o.neuronKey;
+
+        return genome;
+    }
+
+    toObject() {
+        return {
+            key: this.key,
+            neurons: Object.values(this.neurons).map(neuron => neuron.toObject()),
+            connections: Object.values(this.connections).map(connection => connection.toObject()),
+            fitness: this.fitness,
+            neuronKey: this.neuronKey
+        };
     }
 
     activate(inputs) {
