@@ -131,6 +131,7 @@ function savePopulation() {
     let a = document.createElement('a');
     a.href = link;
     a.target = '_blank';
+    a.download = 'population.json';
     document.body.append(a);
     a.click();
     document.body.removeChild(a);

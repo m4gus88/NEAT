@@ -61,12 +61,12 @@ var DEFAULT_CONFIG = {
         disjointCoefficient: 1.0                  // How many points of difference it makes to have a connection the other genome doesn't.
     },
     species: {
-        distanceThreshold: 3.0,                   // How many points of difference does it take to not fit into the same species.
+        distanceThreshold: 30.0,                   // How many points of difference does it take to not fit into the same species.
         extinctionThreshold: 20                   // How many generations does it take for a species to go extinct if they're not improving.
     },
     reproduction: {
         survivalThreshold: 0.2,                   // Proportion of the population that survives from each species.
-        speciesElitism: 0,                        // How many species can survive even if they're not improving.
-        elitism: 0                                // How many members transfer over (without crossing or mutation) from each species.
+        speciesElitism: 3,                        // How many species can survive even if they're not improving.
+        elitism: 2                                // How many members transfer over (without crossing or mutation) from each species.
     }
 };
