@@ -1,6 +1,6 @@
 class Target {
     constructor() {
-        this.position = createVector(width/2, height/2);
+        this.position = createVector(game.width/2, game.height/2);
         this.angle = Math.random() * 360;
         this.velocity = 2;
         this.maxTurn = 10;
@@ -20,7 +20,7 @@ class Target {
         this.position.x += velocity.x;
         this.position.y += velocity.y;
 
-        if (this.position.x < 50 || this.position.x > width - 50 || this.position.y < 50 || this.position.y > height - 50) {
+        if (this.position.x < 50 || this.position.x > game.width - 50 || this.position.y < 50 || this.position.y > game.height - 50) {
             this.angle = (this.angle + 180) % 360;
         }
     }

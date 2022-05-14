@@ -2,7 +2,7 @@ class Ship {
     constructor() {
         let cornerX = Math.random() > 0.5 ? 1 : 0;
         let cornerY = Math.random() > 0.5 ? 1 : 0;
-        this.position = createVector(cornerX * (width - 40) + 20, cornerY * (height - 40) + 20);
+        this.position = createVector(cornerX * (game.width - 40) + 20, cornerY * (game.height - 40) + 20);
         this.angle = Math.random() * 90 + (cornerX + cornerY) * 90;
 
         if (cornerY === 1 && cornerX === 0) {
@@ -29,7 +29,7 @@ class Ship {
         this.position.x += velocity.x;
         this.position.y += velocity.y;
 
-        if (this.position.x < 0 || this.position.x > width || this.position.y < 0 || this.position.y > height) {
+        if (this.position.x < 0 || this.position.x > game.width || this.position.y < 0 || this.position.y > game.height) {
             return false;
         }
 
